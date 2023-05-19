@@ -3,6 +3,24 @@ const app = express();
 const http = require("http").createServer(app);
 const io = require("socket.io")(http);
 
+//Allow cors
+const cors = require("cors");
+//Loop of allowed origins
+const allowedOrigins = [
+  "http://localhost:3001",
+  "http://localhost:3000",
+  "https://admin-for-all.vercel.app",
+  "https://pharmacy-hjmr.vercel.app",
+];
+
+app.use(
+  cors({
+    origin: allowedOrigins,
+    credentials: true,
+  })
+);
+
+
 // Serve the HTML file
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/index.html");
