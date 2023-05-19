@@ -2,17 +2,9 @@ const express = require("express");
 const app = express();
 const http = require("http").createServer(app);
 
-// Array of allowed origins
-const allowedOrigins = [
-  "http://localhost:3001",
-  "http://localhost:3000",
-  "https://admin-for-all.vercel.app",
-  "https://pharmacy-hjmr.vercel.app",
-];
-
 const io = require("socket.io")(http, {
   cors: {
-    origin: allowedOrigins,
+    origin: "*",
     credentials: true,
   },
 });
