@@ -11,7 +11,7 @@ const io = require("socket.io")(http, {
 
 // Serve the HTML file
 app.get("/", (req, res) => {
-  res.sendFile(__dirname + "/index.html");
+  res.send("hsdfhgfbg")
 });
 
 // Handle socket connections
