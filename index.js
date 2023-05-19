@@ -1,15 +1,6 @@
 const express = require("express");
 const app = express();
 const http = require("http").createServer(app);
-const io = require("socket.io")(http, {
-  cors: {
-    origin: "http://localhost:3000",
-    methods: ["GET", "POST"],
-  },
-});
-
-// Allow cors
-const cors = require("cors");
 
 // Array of allowed origins
 const allowedOrigins = [
@@ -19,14 +10,12 @@ const allowedOrigins = [
   "https://pharmacy-hjmr.vercel.app",
 ];
 
-// Set up cors options
-const corsOptions = {
-  origin: allowedOrigins,
-  credentials: true,
-};
-
-// Use cors middleware with options
-app.use(cors(corsOptions));
+const io = require("socket.io")(http, {
+  cors: {
+    origin: allowedOrigins,
+    credentials: true,
+  },
+});
 
 // Serve the HTML file
 app.get("/", (req, res) => {
