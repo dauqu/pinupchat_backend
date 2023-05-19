@@ -3,9 +3,10 @@ const app = express();
 const http = require("http").createServer(app);
 const io = require("socket.io")(http);
 
-//Allow cors
+// Allow cors
 const cors = require("cors");
-//Loop of allowed origins
+
+// Array of allowed origins
 const allowedOrigins = [
   "http://localhost:3001",
   "http://localhost:3000",
@@ -13,13 +14,14 @@ const allowedOrigins = [
   "https://pharmacy-hjmr.vercel.app",
 ];
 
-app.use(
-  cors({
-    origin: allowedOrigins,
-    credentials: true,
-  })
-);
+// Set up cors options
+const corsOptions = {
+  origin: allowedOrigins,
+  credentials: true,
+};
 
+// Use cors middleware with options
+app.use(cors(corsOptions));
 
 // Serve the HTML file
 app.get("/", (req, res) => {
@@ -44,6 +46,7 @@ io.on("connection", (socket) => {
 });
 
 // Start the server
-http.listen(3000, () => {
-  console.log("Server listening on port 3000");
+const port = process.env.PORT || 3000;
+http.listen(port, () => {
+  console.log(`Server listening on port ${port}`);
 });
