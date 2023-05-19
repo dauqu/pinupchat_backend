@@ -11,7 +11,8 @@ const io = require("socket.io")(http, {
 
 // Serve the HTML file
 app.get("/", (req, res) => {
-  res.send("hsdfhgfbg")
+  //html file 
+  res.sendFile(__dirname + "/index.html");
 });
 
 // Handle socket connections
@@ -32,6 +33,6 @@ io.on("connection", (socket) => {
 });
 
 // Start the server
-http.listen(3000, () => {
+http.listen(4000, () => {
   console.log(`Server listening on port 3000`);
 });
