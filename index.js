@@ -9,6 +9,8 @@ const io = require("socket.io")(http, {
   },
 });
 
+app.use(express.json());
+
 //Connect to database
 const connectDB = require("./config/database");
 connectDB();
