@@ -9,16 +9,43 @@ const io = require("socket.io")(http, {
   },
 });
 
+//Connect to database
+const connectDB = require("./config/database");
+connectDB();
+
+//Allow cors
+const cors = require("cors");
+//Loop of allowed origins
+const allowedOrigins = [
+  "http://localhost:3001",
+  "http://localhost:3000",
+  "https://admin-for-all.vercel.app",
+  "https://dauqunews.vercel.app",
+];
+
+app.use(
+  cors({
+    origin: allowedOrigins,
+    credentials: true,
+  })
+);
+
 // Serve the HTML file
 app.get("/", (req, res) => {
-  //html file 
+  //html file
   res.sendFile(__dirname + "/home.html");
 });
 
-// Handle socket connections
-io.on("connection", (socket) => {
-  console.log("A user connected.");
+const apiv1 = "/api/v1";
 
+app.use("/api", require("./routes/qr_login")(io));
+
+app.use(`${apiv1}/register`, require("./routes/register"));
+app.use(`${apiv1}/login`, require("./routes/login"));
+app.use(`${apiv1}/profile`, require("./routes/profile"));
+
+// // Handle socket connections
+io.on("connection", (socket) => {
   // Handle joining the room
   socket.on("join_room", (room) => {
     // Join the specified room

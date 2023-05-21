@@ -1,9 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const UsersSchema = require("./../models/users_schema");
+const UsersSchema = require("./../schema/user_schema");
 const bcrypt = require("bcryptjs");
 const { v4: uuidv4 } = require('uuid');
-const SendMail = require("./../functions/send_mail");
+const SendMail = require("./../functions/check_auth");
 
 router.get("/", (req, res) => {
   res.json({
