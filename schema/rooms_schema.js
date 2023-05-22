@@ -37,6 +37,12 @@ const RoomSchema = new mongoose.Schema(
       required: true,
       default: false,
     },
+    last_message: {
+      // Type will dynamic be changed to message
+      type: String,
+      required: true,
+      default: "",
+    }
   },
   {
     timestamps: true,
