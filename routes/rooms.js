@@ -4,6 +4,24 @@ const RoomsSchema = require("../schema/rooms_schema");
 const UsersSchema = require("./../schema/user_schema");
 const CheckAuth = require("./../functions/check_auth");
 
+// GET rooms for the current user
+router.get("/my", async (req, res) => {
+  const check = await CheckAuth(req, res);
+  if (check.auth === false) {
+    return res.status(401).json({ message: "Unauthorized", auth: false });
+  }
+
+  try {
+    const rooms = await RoomsSchema.find({ user_id: check.data._id }).populate({
+      path: "participant_id",
+      select: "-password -email -phone -role -rpt",
+    });
+    res.status(200).json(rooms);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to retrieve rooms" });
+  }
+});
+
 // GET all contacts
 router.get("/", async (req, res) => {
   try {
@@ -35,12 +53,10 @@ router.post("/", async (req, res) => {
   });
 
   if (existingRoom) {
-    return res
-      .status(400)
-      .json({
-        message: "Participant already exists in the room",
-        status: "error",
-      });
+    return res.status(400).json({
+      message: "Participant already exists in the room",
+      status: "error",
+    });
   }
 
   // const decoded = jwt.verify(req.cookies.token, process.env.JWT_SECRET);
