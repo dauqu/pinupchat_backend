@@ -28,14 +28,17 @@ const RoomSchema = new mongoose.Schema(
     deleted: {
       type: Boolean,
       required: true,
+      default: false,
     },
     blocked: {
       type: Boolean,
       required: true,
+      default: false,
     },
     muted: {
       type: Boolean,
       required: true,
+      default: false,
     },
   },
   {
