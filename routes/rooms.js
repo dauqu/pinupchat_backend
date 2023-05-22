@@ -27,6 +27,21 @@ router.post("/", async (req, res) => {
     return res.status(404).json({ message: "User not found", status: "error" });
   }
 
+  // Check if participant already exists in the room
+  const existingRoom = await RoomsSchema.findOne({
+    user_id: req.check.data._id,
+    participant_id: req.body.participant_id,
+  });
+
+  if (existingRoom) {
+    return res
+      .status(400)
+      .json({
+        message: "Participant already exists in the room",
+        status: "error",
+      });
+  }
+
   // const decoded = jwt.verify(req.cookies.token, process.env.JWT_SECRET);
   const msg = new RoomsSchema({
     room_type: req.body.room_type,
