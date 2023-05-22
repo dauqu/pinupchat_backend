@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const RoomsSchema = require("../schema/rooms_schema");
+const UsersSchema = require("./../schema/user_schema");
 
 // GET all contacts
 router.get("/", async (req, res) => {
@@ -19,11 +20,18 @@ router.post("/", async (req, res) => {
     return res.status(401).json({ message: "Unauthorized", auth: false });
   }
 
+  //Check if user exists
+  const user = await UsersSchema.findOne({ _id: req.body.participant_id });
+
+  if (!user) {
+    return res.status(404).json({ message: "User not found", status: "error" });
+  }
+
   // const decoded = jwt.verify(req.cookies.token, process.env.JWT_SECRET);
   const msg = new RoomsSchema({
-    room_type: req.body.chat_room_id,
+    room_type: req.body.room_type,
     user_id: req.check.data._id,
-    participant_id: req.body.content_type,
+    participant_id: req.body.participant_id,
   });
   try {
     await msg.save();
