@@ -19,6 +19,32 @@ router.get("/", async (req, res) => {
   }
 });
 
+// Get Profile
+router.get("/:id", async (req, res) => {
+  // const check = await CheckAuth(req, res);
+  
+    try {
+      // Assuming you have a database or some data source where profiles are stored
+      const profileId = req.params.id; // Get the profile ID from the route parameter
+      const profile = await UsersSchema.findById(profileId); // Assuming you have a "Profile" model or data access object
+
+      if (!profile) {
+        return res
+          .status(404)
+          .json({ message: "Profile not found", data: null, auth: true });
+      }
+
+      return res
+        .status(200)
+        .json({ message: "Authorized", data: profile, auth: true });
+    } catch (error) {
+      console.error(error);
+      return res
+        .status(500)
+        .json({ message: "Internal server error", data: null, auth: true });
+    }
+});
+
 //Update Profile
 router.post("/", async (req, res) => {
   const check = await CheckAuth(req, res);
@@ -117,7 +143,6 @@ router.get("/verify-email/:uuid", async (req, res) => {
   if (uuid !== check.data.rpt) {
     return res.status(400).json({ message: "Invalid link" });
   }
-
 });
 
 //Verify phone
