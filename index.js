@@ -46,6 +46,7 @@ app.use(`${apiv1}/register`, require("./routes/register"));
 app.use(`${apiv1}/login`, require("./routes/login"));
 app.use(`${apiv1}/profile`, require("./routes/profile"));
 app.use(`${apiv1}/rooms`, require("./routes/rooms"));
+app.use(`${apiv1}/message`, require("./routes/message"));
 
 // // Handle socket connections
 io.on("connection", (socket) => {
