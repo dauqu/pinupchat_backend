@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const RoomsSchema = require("../schema/rooms_schema");
 const UsersSchema = require("./../schema/user_schema");
+const CheckAuth = require("./../functions/check_auth");
 
 // GET all contacts
 router.get("/", async (req, res) => {
@@ -29,7 +30,7 @@ router.post("/", async (req, res) => {
 
   // Check if participant already exists in the room
   const existingRoom = await RoomsSchema.findOne({
-    user_id: req.check.data._id,
+    user_id: check.data._id,
     participant_id: req.body.participant_id,
   });
 
@@ -45,7 +46,7 @@ router.post("/", async (req, res) => {
   // const decoded = jwt.verify(req.cookies.token, process.env.JWT_SECRET);
   const msg = new RoomsSchema({
     room_type: req.body.room_type,
-    user_id: req.check.data._id,
+    user_id: check.data._id,
     participant_id: req.body.participant_id,
   });
   try {

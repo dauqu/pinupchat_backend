@@ -3,10 +3,6 @@ const mongoose = require("mongoose");
 // Schema
 const RoomSchema = new mongoose.Schema(
   {
-    _id: {
-      type: mongoose.Schema.Types.ObjectId,
-      default: mongoose.Types.ObjectId,
-    },
     room_type: {
       type: String,
       required: true,
