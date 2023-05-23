@@ -1,13 +1,8 @@
 const mongoose = require("mongoose");
 
 // Schema
-const RoomSchema = new mongoose.Schema(
+const ContactsSchema = new mongoose.Schema(
   {
-    room_type: {
-      type: String,
-      required: true,
-      default: "single",
-    },
     user_id: {
       type: String,
       required: true,
@@ -38,15 +33,14 @@ const RoomSchema = new mongoose.Schema(
       default: false,
     },
     last_message: {
-      // Type will dynamic be changed to message
       type: String,
       required: true,
       default: "",
-    }
+    },
   },
   {
     timestamps: true,
   }
 );
 
-module.exports = mongoose.model("rooms", RoomSchema);
+module.exports = mongoose.model("contacts", ContactsSchema);

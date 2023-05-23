@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const RoomsSchema = require("../schema/rooms_schema");
-const UsersSchema = require("./../schema/user_schema");
-const CheckAuth = require("./../functions/check_auth");
+const ContactsSchema = require("../schema/contacts_schema");
+const UsersSchema = require("../schema/user_schema");
+const CheckAuth = require("../functions/check_auth");
 
 // GET rooms for the current user
 router.get("/my", async (req, res) => {
@@ -12,7 +12,7 @@ router.get("/my", async (req, res) => {
   }
 
   try {
-    const rooms = await RoomsSchema.find({ user_id: check.data._id }).populate({
+    const rooms = await ContactsSchema.find({ user_id: check.data._id }).populate({
       path: "participant_id",
       select: "-password -email -phone -role -rpt",
     });
@@ -25,7 +25,7 @@ router.get("/my", async (req, res) => {
 // GET all contacts
 router.get("/", async (req, res) => {
   try {
-    const rooms = await RoomsSchema.find();
+    const rooms = await ContactsSchema.find();
     res.json(rooms);
   } catch (error) {
     res.status(500).json({ error: "Failed to retrieve contacts" });
@@ -47,7 +47,7 @@ router.post("/", async (req, res) => {
   }
 
   // Check if participant already exists in the room
-  const existingRoom = await RoomsSchema.findOne({
+  const existingRoom = await ContactsSchema.findOne({
     user_id: check.data._id,
     participant_id: req.body.participant_id,
   });
@@ -60,7 +60,7 @@ router.post("/", async (req, res) => {
   }
 
   // const decoded = jwt.verify(req.cookies.token, process.env.JWT_SECRET);
-  const msg = new RoomsSchema({
+  const msg = new ContactsSchema({
     room_type: req.body.room_type,
     user_id: check.data._id,
     participant_id: req.body.participant_id,

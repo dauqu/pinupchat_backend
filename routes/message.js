@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const MessageSchema = require("../schema/message_schema");
+const MessageSchema = require("../schema/private_chat_schema");
 const CheckAuth = require("./../functions/check_auth");
 
 // GET all contacts
@@ -19,10 +19,13 @@ router.get("/", async (req, res) => {
 
 //Create One
 router.post("/", async (req, res) => {
+
   const check = await CheckAuth(req, res);
   if (check.auth === false) {
     return res.status(401).json({ message: "Unauthorized", auth: false });
   }
+
+
 
   // const decoded = jwt.verify(req.cookies.token, process.env.JWT_SECRET);
   const msg = new MessageSchema({
