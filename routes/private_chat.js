@@ -14,6 +14,24 @@ router.get("/", async (req, res) => {
   }
 });
 
+router.get("/:recipient_id", async (req, res) => {
+  //Check Auth
+  const check = await CheckAuth(req, res);
+  if (check.auth === false) {
+    return res.status(401).json({ message: "Unauthorized", auth: false });
+  }
+
+  const sender_id = check.data._id;
+
+  try {
+    const { recipient_id } = req.params;
+    const messages = await PrivateChat.find({ recipient_id, sender_id });
+    res.json(messages);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to retrieve messages" });
+  }
+});
+
 // Create a new private chat
 router.post("/", async (req, res) => {
   //Check Auth
