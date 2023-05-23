@@ -7,7 +7,10 @@ const CheckAuth = require("./../functions/check_auth");
 // GET all contacts
 router.get("/", async (req, res) => {
   try {
-    const message = await MessageSchema.find();
+    const message = await MessageSchema.find().populate({
+      path: "sender_id",
+      select: "-password -email -phone -role -rpt",
+    });
     res.json(message);
   } catch (error) {
     res.status(500).json({ error: "Failed to retrieve contacts" });
@@ -24,7 +27,7 @@ router.post("/", async (req, res) => {
   // const decoded = jwt.verify(req.cookies.token, process.env.JWT_SECRET);
   const msg = new MessageSchema({
     chat_room_id: req.body.chat_room_id,
-    sender_id: req.check.data._id,
+    sender_id: check.data._id,
     content_type: req.body.content_type,
     content: req.body.content,
   });
