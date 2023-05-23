@@ -45,10 +45,12 @@ app.use("/api", require("./routes/qr_login")(io));
 app.use(`${apiv1}/register`, require("./routes/register"));
 app.use(`${apiv1}/login`, require("./routes/login"));
 app.use(`${apiv1}/profile`, require("./routes/profile"));
-app.use(`${apiv1}/rooms`, require("./routes/contacts"));
-app.use(`${apiv1}/message`, require("./routes/message"));
-app.use(`${apiv1}/chat`, require("./routes/private_chat"));
 app.use(`${apiv1}/users`, require("./routes/users"));
+
+app.use(`${apiv1}/contacts`, require("./routes/contacts"));
+app.use(`${apiv1}/chat`, require("./routes/private_chat"));
+
+app.use(`${apiv1}/message`, require("./routes/message"));
 
 // // Handle socket connections
 io.on("connection", (socket) => {

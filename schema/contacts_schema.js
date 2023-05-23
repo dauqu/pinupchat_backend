@@ -34,7 +34,6 @@ const ContactsSchema = new mongoose.Schema(
     },
     last_message: {
       type: String,
-      required: true,
       default: "",
     },
   },

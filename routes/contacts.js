@@ -12,7 +12,9 @@ router.get("/my", async (req, res) => {
   }
 
   try {
-    const rooms = await ContactsSchema.find({ user_id: check.data._id }).populate({
+    const rooms = await ContactsSchema.find({
+      user_id: check.data._id,
+    }).populate({
       path: "participant_id",
       select: "-password -email -phone -role -rpt",
     });
@@ -61,7 +63,6 @@ router.post("/", async (req, res) => {
 
   // const decoded = jwt.verify(req.cookies.token, process.env.JWT_SECRET);
   const msg = new ContactsSchema({
-    room_type: req.body.room_type,
     user_id: check.data._id,
     participant_id: req.body.participant_id,
   });
