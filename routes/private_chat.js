@@ -25,7 +25,12 @@ router.get("/:recipient_id", async (req, res) => {
 
   try {
     const { recipient_id } = req.params;
-    const messages = await PrivateChat.find({ recipient_id, sender_id });
+    const messages = await PrivateChat.find({
+      $or: [
+        { sender_id: recipient_id, recipient_id: sender_id },
+        { sender_id, recipient_id: recipient_id },
+      ],
+    });
     res.json(messages);
   } catch (error) {
     res.status(500).json({ error: "Failed to retrieve messages" });
