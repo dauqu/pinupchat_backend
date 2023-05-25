@@ -15,7 +15,7 @@ router.get("/", async (req, res) => {
 });
 
 router.get("/:recipient_id", async (req, res) => {
-  //Check Auth
+  //Check Auth 
   const check = await CheckAuth(req, res);
   if (check.auth === false) {
     return res.status(401).json({ message: "Unauthorized", auth: false });
