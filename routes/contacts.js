@@ -62,29 +62,28 @@ router.get("/find/:id", async (req, res) => {
 });
 
 // GET rooms for the current user
-router.get("/my", async (req, res) => {
+router.get("/mine", async (req, res) => {
   const check = await CheckAuth(req, res);
   if (check.auth === false) {
     return res.status(401).json({ message: "Unauthorized", auth: false });
   }
 
-  try {
-    try {
-      //Find wherer participants
-      const msg = await ContactsSchema.find({
-        participants: { $in: [check.data._id] },
-      }).populate({
-        path: "participants",
-        select: "-password -email -phone -role -rpt",
-        match: { _id: { $ne: check.data._id } },
-      });
+  //Convert opject id to string
+  const myid = check.data._id.toString();
 
-      res.json(msg);
-    } catch (error) {
-      res.status(500).json({ error: "Failed to retrieve contacts" });
-    }
+  try {
+    //Find wherer participants
+    const msg = await ContactsSchema.find({
+      participants: { $in: [myid] },
+    }).populate({
+      path: "participants",
+      select: "-password -email -phone -role -rpt",
+      match: { _id: { $ne: myid } },
+    });
+
+    res.json(msg);
   } catch (error) {
-    res.status(500).json({ error: "Failed to retrieve rooms" });
+    res.status(500).json({ error: "Failed to retrieve contacts" });
   }
 });
 
