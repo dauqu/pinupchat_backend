@@ -90,7 +90,10 @@ router.get("/mine", async (req, res) => {
 // GET all contacts
 router.get("/", async (req, res) => {
   try {
-    const rooms = await ContactsSchema.find();
+    const rooms = await ContactsSchema.find().populate({
+      path: "participants",
+      select: "-password -email -phone -role -rpt",
+    });
     res.json(rooms);
   } catch (error) {
     res.status(500).json({ error: "Failed to retrieve contacts" });
