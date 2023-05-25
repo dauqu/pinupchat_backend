@@ -4,6 +4,63 @@ const ContactsSchema = require("../schema/contacts_schema");
 const UsersSchema = require("../schema/user_schema");
 const CheckAuth = require("../functions/check_auth");
 
+// GET all contacts
+router.get("/create", async (req, res) => {
+  const participants = ["6469eaf6e6f38eee5142f58f", "646a32c67d564d4744c69716"];
+  try {
+    //Check if already exists
+    const check = await ContactsSchema.find({
+      participants: { $all: participants },
+    });
+
+    //Check if both participants are the same
+    if (participants[0] === participants[1]) {
+      return res.json({
+        message: "You cannot create a room with yourself",
+        status: "success",
+      });
+    }
+
+    if (check.length > 0) {
+      return res.json({ message: "Room already exists", status: "success" });
+    }
+
+    //Add data
+    const msg = new ContactsSchema({
+      participants: participants,
+    });
+
+    await msg.save();
+
+    res.json({ message: "Message was sent successfully", status: "success" });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to retrieve contacts" });
+  }
+});
+
+// GET all contacts
+router.get("/find/:id", async (req, res) => {
+  const { id } = req.params;
+
+  const myid = "6469eaf6e6f38eee5142f58f";
+
+  console.log(id);
+  try {
+    //Find wherer participants
+    const msg = await ContactsSchema.find({
+      participants: { $in: [id] },
+    }).populate({
+      path: "participants",
+      select: "-password -email -phone -role -rpt",
+      match: { _id: { $ne: myid } },
+    });
+
+    res.json(msg);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to retrieve contacts" });
+  }
+});
+
 // GET rooms for the current user
 router.get("/my", async (req, res) => {
   const check = await CheckAuth(req, res);
@@ -12,13 +69,20 @@ router.get("/my", async (req, res) => {
   }
 
   try {
-    const rooms = await ContactsSchema.find({
-      user_id: check.data._id,
-    }).populate({
-      path: "participant_id",
-      select: "-password -email -phone -role -rpt",
-    });
-    res.status(200).json(rooms);
+    try {
+      //Find wherer participants
+      const msg = await ContactsSchema.find({
+        participants: { $in: [check.data._id] },
+      }).populate({
+        path: "participants",
+        select: "-password -email -phone -role -rpt",
+        match: { _id: { $ne: check.data._id } },
+      });
+
+      res.json(msg);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to retrieve contacts" });
+    }
   } catch (error) {
     res.status(500).json({ error: "Failed to retrieve rooms" });
   }
@@ -27,10 +91,7 @@ router.get("/my", async (req, res) => {
 // GET all contacts
 router.get("/", async (req, res) => {
   try {
-    const rooms = await ContactsSchema.find().populate({
-      path: "participant_id",
-      select: "-password -email -phone -role -rpt",
-    });
+    const rooms = await ContactsSchema.find();
     res.json(rooms);
   } catch (error) {
     res.status(500).json({ error: "Failed to retrieve contacts" });
