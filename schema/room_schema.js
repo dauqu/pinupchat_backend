@@ -5,9 +5,14 @@ const RoomSchema = new mongoose.Schema(
   {
     name: {
       type: String,
+      required: true,
+      default: "",
     },
-    groupe_id: {
+    type: {
       type: String,
+      required: true,
+      default: "single",
+      enum: ["single", "group"],
     },
     last_message: {
       type: String,
