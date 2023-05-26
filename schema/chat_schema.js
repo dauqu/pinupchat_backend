@@ -7,12 +7,12 @@ const GroupeSchema = new mongoose.Schema(
       type: Array,
       default: [],
     },
-    sender_id: {
+    sender: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "users",
       required: true,
     },
-    room_id: {
+    room: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "rooms",
       required: true,
@@ -20,9 +20,10 @@ const GroupeSchema = new mongoose.Schema(
     message: {
       type: String,
       required: true,
-    }, 
-    parant_message_id: {
-      type: String,
+    },
+    parant_message: {
+      type: mongoose.Schema.ObjectId,
+      ref: "chat",
       default: null,
     },
   },

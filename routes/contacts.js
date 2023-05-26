@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const ContactsSchema = require("../schema/contacts_schema");
-const UsersSchema = require("../schema/user_schema");
+// const UsersSchema = require("../schema/user_schema");
 const CheckAuth = require("../functions/check_auth");
 const RoomSchema = require("./../schema/room_schema");
 
