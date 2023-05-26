@@ -3,6 +3,7 @@ const router = express.Router();
 const ContactsSchema = require("../schema/contacts_schema");
 const UsersSchema = require("../schema/user_schema");
 const CheckAuth = require("../functions/check_auth");
+const RoomSchema = require("./../schema/room_schema");
 
 // GET all contacts
 router.post("/", async (req, res) => {
@@ -12,6 +13,18 @@ router.post("/", async (req, res) => {
   //Return if friend is not provided
   if (!friend_id && !room_id) {
     return res.json({ message: "All Field is not provided", status: "failed" });
+  }
+
+  // Check if room exists
+  try {
+    const room = await RoomSchema.findById(room_id);
+    if (!room) {
+      return res.status(404).json({ message: "Room not found" });
+    }
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "An error occurred while fetching the room" });
   }
 
   const auth = await CheckAuth(req, res);
