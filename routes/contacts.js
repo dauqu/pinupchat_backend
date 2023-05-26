@@ -65,29 +65,6 @@ router.post("/", async (req, res) => {
   }
 });
 
-// GET all contacts
-// router.get("/find/:id", async (req, res) => {
-//   const { id } = req.params;
-
-//   const myid = "6469eaf6e6f38eee5142f58f";
-
-//   console.log(id);
-//   try {
-//     //Find wherer participants
-//     const msg = await ContactsSchema.find({
-//       participants: { $in: [id] },
-//     }).populate({
-//       path: "participants",
-//       select: "-password -email -phone -role -rpt",
-//       match: { _id: { $ne: myid } },
-//     });
-
-//     res.json(msg);
-//   } catch (error) {
-//     res.status(500).json({ error: "Failed to retrieve contacts" });
-//   }
-// });
-
 // GET rooms for the current user
 router.get("/mine", async (req, res) => {
   const check = await CheckAuth(req, res);
@@ -126,6 +103,44 @@ router.get("/", async (req, res) => {
     res.status(500).json({ error: "Failed to retrieve contacts" });
   }
 });
+
+//Delete by id
+router.delete("/:id", async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const msg = await ContactsSchema.findByIdAndDelete(id);
+    res.json({
+      message: "Message was deleted successfully",
+      status: "success",
+    });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to delete message" });
+  }
+});
+
+// GET all contacts
+// router.get("/find/:id", async (req, res) => {
+//   const { id } = req.params;
+
+//   const myid = "6469eaf6e6f38eee5142f58f";
+
+//   console.log(id);
+//   try {
+//     //Find wherer participants
+//     const msg = await ContactsSchema.find({
+//       participants: { $in: [id] },
+//     }).populate({
+//       path: "participants",
+//       select: "-password -email -phone -role -rpt",
+//       match: { _id: { $ne: myid } },
+//     });
+
+//     res.json(msg);
+//   } catch (error) {
+//     res.status(500).json({ error: "Failed to retrieve contacts" });
+//   }
+// });
 
 //Create One
 // router.post("/", async (req, res) => {
@@ -168,20 +183,5 @@ router.get("/", async (req, res) => {
 //     res.status(500).json({ message: error.message, status: "error" });
 //   }
 // });
-
-//Delete by id
-router.delete("/:id", async (req, res) => {
-  const { id } = req.params;
-
-  try {
-    const msg = await ContactsSchema.findByIdAndDelete(id);
-    res.json({
-      message: "Message was deleted successfully",
-      status: "success",
-    });
-  } catch (error) {
-    res.status(500).json({ error: "Failed to delete message" });
-  }
-});
 
 module.exports = router;
