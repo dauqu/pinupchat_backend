@@ -8,10 +8,6 @@ const ContactsSchema = new mongoose.Schema(
       required: true,
       ref: "users",
     },
-    room: {
-      type: String,
-      required: true,
-    },
     last_message: {
       type: String,
       default: "",

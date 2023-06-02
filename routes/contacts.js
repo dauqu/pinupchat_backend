@@ -83,7 +83,7 @@ router.get("/mine", async (req, res) => {
       participants: { $in: [myid] },
     }).populate({
       path: "participants",
-      select: "-password -email -phone -role -rpt",
+      select: "-password -email -role -rpt",
       match: { _id: { $ne: myid } },
     });
 

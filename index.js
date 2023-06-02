@@ -48,9 +48,7 @@ app.use(`${apiv1}/profile`, require("./routes/profile"));
 app.use(`${apiv1}/users`, require("./routes/users"));
 
 app.use(`${apiv1}/contacts`, require("./routes/contacts"));
-// app.use(`${apiv1}/chat`, require("./routes/private_chat"));
-
-app.use(`${apiv1}/message`, require("./routes/message"));
+app.use(`${apiv1}/messages`, require("./routes/message"));
 
 app.use(`${apiv1}/room`, require("./routes/room"));
 app.use(`${apiv1}/participants`, require("./routes/participants"));

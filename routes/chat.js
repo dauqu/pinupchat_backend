@@ -34,7 +34,7 @@ router.post("/", async (req, res) => {
   const auth = await CheckAuth(req, res);
 
   const roomId = req.body.room;
-
+  
   // Check if room exists
   try {
     const room = await ContactsSchema.findById(roomId);
