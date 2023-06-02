@@ -22,12 +22,12 @@ const allowedOrigins = [
   "http://localhost:3001",
   "http://localhost:3000",
   "https://admin-for-all.vercel.app",
-  "https://dauqunews.vercel.app",
+  "https://whatsapp-frontend-lake.vercel.app",
 ];
 
 app.use(
   cors({
-    origin: "*",
+    origin: allowedOrigins,
     credentials: true,
   })
 );
