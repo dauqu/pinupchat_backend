@@ -71,6 +71,21 @@ io.on("connection", (socket) => {
     socket.on("make_audio_call", (data) => {
       io.to(room).emit("audio_call", data);
     });
+
+    //End Audio Call
+    socket.on("end_audio_call", (data) => {
+      io.to(room).emit("end_audio_call", data);
+    });
+
+    //Make Video Call
+    socket.on("make_video_call", (data) => {
+      io.to(room).emit("video_call", data);
+    });
+
+    //End Video Call
+    socket.on("end_video_call", (data) => {
+      io.to(room).emit("end_video_call", data);
+    });
   });
 });
 
