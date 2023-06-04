@@ -66,6 +66,11 @@ io.on("connection", (socket) => {
       // Broadcast the event data to all connected clients in the room
       io.to(room).emit("event_created", eventData);
     });
+
+    //Make Audio Call
+    socket.on("make_audio_call", (data) => {
+      io.to(room).emit("audio_call", data);
+    });
   });
 });
 
