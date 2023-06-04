@@ -53,13 +53,8 @@ module.exports = function (io) {
         .status(201)
         .json({ message: "Message was sent successfully", status: "success" });
 
-        const message = await MessageSchema.find({
-          room_id: roomId,
-        });
-
-        //Emmit to room
-        io.to(roomId).emit("new_message", message);
-
+      //Emmit to room
+      io.to(check.data._id).emit("new_message", msg);
     } catch (error) {
       res.status(500).json({ message: error.message, status: "error" });
     }
