@@ -54,11 +54,10 @@ module.exports = function (io) {
         .json({ message: "Message was sent successfully", status: "success" });
 
       //Emmit to room
-      io.on("new_message", (msg) => {
-        io.to(roomId).emit("new_message", msg);
-        //Send message without room
-        io.emit("new_message", msg);
-      });
+      // Emit to room
+      io.to(roomId).emit("new_message", msg);
+      // Send message without room
+      io.emit("new_message", msg);
     } catch (error) {
       res.status(500).json({ message: error.message, status: "error" });
     }
