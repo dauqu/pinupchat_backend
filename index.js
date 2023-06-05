@@ -53,6 +53,7 @@ app.use(`${apiv1}/messages`, require("./routes/message")(io));
 app.use(`${apiv1}/room`, require("./routes/room"));
 app.use(`${apiv1}/participants`, require("./routes/participants"));
 app.use(`${apiv1}/chat`, require("./routes/chat"));
+app.use(`${apiv1}/call`, require("./routes/call"));
 
 // // Handle socket connections
 io.on("connection", (socket) => {
