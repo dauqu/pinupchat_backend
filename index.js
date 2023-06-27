@@ -55,6 +55,8 @@ app.use(`${apiv1}/participants`, require("./routes/participants"));
 app.use(`${apiv1}/chat`, require("./routes/chat"));
 app.use(`${apiv1}/call`, require("./routes/call"));
 
+app.use(`${apiv1}/status`, require("./routes/status"));
+
 // // Handle socket connections
 io.on("connection", (socket) => {
   // Handle joining the room
