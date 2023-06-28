@@ -21,6 +21,14 @@ module.exports = function (io) {
 
   router.get("/:room", async (req, res) => {
     try {
+      //if room is not found
+      const room = await MessageSchema.find({
+        room_id: req.params.room,
+      });
+      if (room.length === 0) {
+        return res.status(404).json({ message: "Room not found" });
+      }
+
       const message = await MessageSchema.find({
         room_id: req.params.room,
       });
