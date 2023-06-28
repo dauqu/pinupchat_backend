@@ -1,0 +1,21 @@
+
+
+Messaages
+        _id
+        attachments
+        sender
+        room
+        message
+        parant_message
+
+Get All Message By Room
+
+Room
+        _id
+        type
+        name
+
+
+Participant
+        users[]
+        room
