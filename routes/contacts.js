@@ -13,11 +13,10 @@ router.post("/", async (req, res) => {
   }
 
   const friend_id = req.body.friend;
-  const room_id = req.body.room_id;
   const my_id = auth.data._id.toString();
 
   //Return if friend is not provided
-  if (!friend_id || !room_id) {
+  if (!friend_id) {
     return res.json({ message: "All Field is not provided", status: "failed" });
   }
 
@@ -26,7 +25,7 @@ router.post("/", async (req, res) => {
     type: "single",
   });
 
-  const room_ids = "";
+  const room_id = "";
 
   // Save the room to the database
   room.save((err, savedRoom) => {
@@ -35,7 +34,7 @@ router.post("/", async (req, res) => {
       console.log(err);
     } else {
       // Return the ID of the saved room
-      room_ids = savedRoom._id;
+      room_id = savedRoom._id;
     }
   });
 
@@ -61,7 +60,7 @@ router.post("/", async (req, res) => {
     //Add data
     const msg = new ContactsSchema({
       participants: participants,
-      room: room_ids,
+      room: room_id,
     });
 
     await msg.save();
