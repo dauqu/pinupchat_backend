@@ -21,12 +21,6 @@ router.get("/mine", async (req, res) => {
   const auth = await CheckAuth(req, res);
 
   try {
-    const participants = await ParticipantsSchema.find({
-      user_id: auth.data._id,
-    }).populate({
-      path: "user_id",
-      select: "-password -email -phone -role -rpt",
-    });
 
     const my_rooms = await ParticipantsSchema.find({
       user_id: auth.data._id,
