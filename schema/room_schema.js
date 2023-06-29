@@ -11,8 +11,8 @@ const RoomSchema = new mongoose.Schema(
     type: {
       type: String,
       required: true,
-      default: "single",
-      enum: ["single", "group"],
+      default: "private",
+      enum: ["private", "public"],
     },
     last_message: {
       type: String,

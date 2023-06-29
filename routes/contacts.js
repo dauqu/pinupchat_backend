@@ -4,9 +4,12 @@ const ContactsSchema = require("../schema/contacts_schema");
 // const UsersSchema = require("../schema/user_schema");
 const CheckAuth = require("../functions/check_auth");
 const RoomSchema = require("./../schema/room_schema");
+const ParticipantsSchema = require("./../schema/participants_schema");
+const UsersSchema = require("./../schema/user_schema");
 
 // GET all contacts
 router.post("/", async (req, res) => {
+  //Check if user is authenticated
   const auth = await CheckAuth(req, res);
   if (auth.auth === false) {
     return res.status(401).json({ message: "Unauthorized", auth: false });
@@ -20,42 +23,54 @@ router.post("/", async (req, res) => {
     return res.json({ message: "All Field is not provided", status: "failed" });
   }
 
-  // Create new room
-  const room = new RoomSchema({
-    type: "single",
+  //Check friend is exist or not
+  const friend = await UsersSchema.findById(friend_id);
+  if (!friend) {
+    return res.json({ message: "Friend not found", status: "failed" });
+  }
+
+  // Create new room and return the ID
+  const room = await RoomSchema({
+    type: "private",
+    name: "Private Chat",
   });
 
-  const room_id = "";
-
-  // Save the room to the database
-  room.save((err, savedRoom) => {
-    if (err) {
-      // Return the error
-      console.log(err);
-    } else {
-      // Return the ID of the saved room
-      room_id = savedRoom._id;
-    }
+  await room.save();
+  
+  //Add participants to the room
+  const participant = new ParticipantsSchema({
+    user_id: my_id,
+    room_id: room._id.toString(),
   });
 
-  const participants = [my_id, friend_id];
+  //Add participants to the room
+  const participant2 = new ParticipantsSchema({
+    user_id: friend_id,
+    room_id: room._id.toString(),
+  });
+
+  //Save participants
+  await participant.save();
+  await participant2.save();
+
+  // const participants = [my_id, friend_id];
   try {
     //Check if already exists
-    const check = await ContactsSchema.find({
-      participants: { $all: participants },
-    });
+    // const check = await ContactsSchema.find({
+    //   participants: { $all: participants },
+    // });
 
     //Check if both participants are the same
-    if (participants[0] === participants[1]) {
-      return res.json({
-        message: "You cannot create a room with yourself",
-        status: "success",
-      });
-    }
+    // if (participants[0] === participants[1]) {
+    //   return res.json({
+    //     message: "You cannot create a room with yourself",
+    //     status: "success",
+    //   });
+    // }
 
-    if (check.length > 0) {
-      return res.json({ message: "Room already exists", status: "success" });
-    }
+    // if (check.length > 0) {
+    //   return res.json({ message: "Room already exists", status: "success" });
+    // }
 
     //Add data
     const msg = new ContactsSchema({
@@ -63,9 +78,11 @@ router.post("/", async (req, res) => {
       room: room_id,
     });
 
-    await msg.save();
+    // await msg.save();
 
-    res.json({ message: "Message was sent successfully", status: "success" });
+    // res.json({ message: "Message was sent successfully", status: "success" });
+
+    res.send(room_id);
   } catch (error) {
     res.status(500).json({ error: "Failed to retrieve contacts" });
   }

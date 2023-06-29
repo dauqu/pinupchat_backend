@@ -7,8 +7,6 @@ Messaages
         message
         parant_message
 
-Get All Message By Room
-
 Room
         _id
         type
@@ -16,5 +14,5 @@ Room
 
 
 Participant
-        users[]
+        user
         room
