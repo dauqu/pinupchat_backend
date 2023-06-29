@@ -7,7 +7,6 @@ const RoomSchema = require("./../schema/room_schema");
 
 // GET all contacts
 router.post("/", async (req, res) => {
-
   const auth = await CheckAuth(req, res);
   if (auth.auth === false) {
     return res.status(401).json({ message: "Unauthorized", auth: false });
@@ -22,17 +21,23 @@ router.post("/", async (req, res) => {
     return res.json({ message: "All Field is not provided", status: "failed" });
   }
 
-  // Check if room exists
-  try {
-    const room = await RoomSchema.findById(room_id);
-    if (!room) {
-      return res.status(404).json({ message: "Room not found" });
+  // Create new room
+  const room = new RoomSchema({
+    type: "single",
+  });
+
+  const room_ids = "";
+
+  // Save the room to the database
+  room.save((err, savedRoom) => {
+    if (err) {
+      // Return the error
+      console.log(err);
+    } else {
+      // Return the ID of the saved room
+      room_ids = savedRoom._id;
     }
-  } catch (error) {
-    return res
-      .status(500)
-      .json({ message: "An error occurred while fetching the room" });
-  }
+  });
 
   const participants = [my_id, friend_id];
   try {
@@ -56,7 +61,7 @@ router.post("/", async (req, res) => {
     //Add data
     const msg = new ContactsSchema({
       participants: participants,
-      room: req.body.room_id,
+      room: room_ids,
     });
 
     await msg.save();
