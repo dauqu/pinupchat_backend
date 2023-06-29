@@ -3,6 +3,7 @@ const router = express.Router();
 
 const MessageSchema = require("../schema/message_schema");
 const CheckAuth = require("./../functions/check_auth");
+const RoomSchema = require("./../schema/room_schema");
 
 module.exports = function (io) {
   // GET all mesages
@@ -37,6 +38,12 @@ module.exports = function (io) {
     const check = await CheckAuth(req, res);
     if (check.auth === false) {
       return res.status(401).json({ message: "Unauthorized", auth: false });
+    }
+
+    //Check room is exist or not
+    const room = await RoomSchema.findById(roomId);
+    if (!room) {
+      return res.json({ message: "Room not found", status: "failed" });
     }
 
     // const decoded = jwt.verify(req.cookies.token, process.env.JWT_SECRET);
