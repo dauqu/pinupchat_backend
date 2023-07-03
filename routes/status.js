@@ -43,13 +43,13 @@ router.post("/", async (req, res) => {
   });
 
   try {
-    const chat = await StatusSchema.create({
+    const status = await StatusSchema({
       user_id: check.auth._id,
       content_type: req.body.content_type,
       content: fileName,
       seen_by: [],
     });
-    res.json(chat);
+    res.json(status);
   } catch (error) {
     res.status(500).json({ error: "Failed to create room" });
   }

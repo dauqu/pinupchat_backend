@@ -2,13 +2,25 @@ const express = require("express");
 const app = express();
 const http = require("http").createServer(app);
 
+//Loop of allowed origins
+const allowedOrigins = [
+  "http://localhost:3001",
+  "http://localhost:3000",
+  "https://admin-for-all.vercel.app",
+  "https://whatsapp-frontend-lake.vercel.app",
+];
+
+//Express file upload
+const fileUpload = require("express-fileupload");
+app.use(fileUpload());
+
 const io = require("socket.io")(http, {
   cors: {
-    origin: "*",
-    credentials: true,
+    origin: "*", //Allow all origins
   },
 });
 
+//Allow json
 app.use(express.json());
 
 //Connect to database
@@ -17,13 +29,6 @@ connectDB();
 
 //Allow cors
 const cors = require("cors");
-//Loop of allowed origins
-const allowedOrigins = [
-  "http://localhost:3001",
-  "http://localhost:3000",
-  "https://admin-for-all.vercel.app",
-  "https://whatsapp-frontend-lake.vercel.app",
-];
 
 app.use(
   cors({
