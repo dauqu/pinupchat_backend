@@ -7,8 +7,8 @@ const CheckAuth = require("./../functions/check_auth");
 // GET all contacts
 router.get("/", async (req, res) => {
   try {
-    const chat = await StatusSchema.find();
-    res.json(chat);
+    const status = await StatusSchema.find();
+    res.json(status);
   } catch (error) {
     res.status(500).json({ error: "Failed to retrieve status" });
   }
