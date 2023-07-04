@@ -14,10 +14,6 @@ const RoomSchema = new mongoose.Schema(
       default: "private",
       enum: ["private", "public"],
     },
-    last_message: {
-      type: String,
-      default: "",
-    },
   },
   {
     timestamps: true,
