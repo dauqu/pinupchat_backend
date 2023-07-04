@@ -23,6 +23,11 @@ const io = require("socket.io")(http, {
 //Allow json
 app.use(express.json());
 
+
+// Serve static files from the 'files' directory
+app.use(express.static('files'));
+
+
 //Connect to database
 const connectDB = require("./config/database");
 connectDB();
