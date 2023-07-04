@@ -4,8 +4,10 @@ const router = express.Router();
 const MessageSchema = require("../schema/message_schema");
 const CheckAuth = require("./../functions/check_auth");
 const RoomSchema = require("./../schema/room_schema");
+const socket = require("socket.io");
 
 module.exports = function (io) {
+
   // GET all mesages
   router.get("/", async (req, res) => {
     try {

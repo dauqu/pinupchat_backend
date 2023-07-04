@@ -69,6 +69,13 @@ io.on("connection", (socket) => {
     // Join the specified room
     socket.join(room);
 
+
+    socket.on("send_message", (messageData) => {
+      // Broadcast the message data to all connected clients in the room
+      console.log(messageData);
+      io.to(room).emit("message_received", messageData);
+    });
+
     // Handle creating an event
     socket.on("create_event", (eventData) => {
       // Broadcast the event data to all connected clients in the room

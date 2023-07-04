@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const StatusSchema = require("./../schema/status_schema");
 const fs = require("fs");
 const CheckAuth = require("./../functions/check_auth");
+const StatusSchema = require("../schema/status_schema");
 
 // GET all contacts
 router.get("/", async (req, res) => {
@@ -43,13 +43,16 @@ router.post("/", async (req, res) => {
   });
 
   try {
-    const status = await StatusSchema({
-      user_id: check.auth._id,
-      content_type: req.body.content_type,
-      content: fileName,
-      seen_by: [],
+    const status = new StatusSchema({
+      user: check.data._id,
+      status_data: fileName,
+      type: req.body.type,
     });
-    res.json(status);
+
+    await status.save();
+
+    res.json({ message: "Status created", status: "success" });
+
   } catch (error) {
     res.status(500).json({ error: "Failed to create room" });
   }

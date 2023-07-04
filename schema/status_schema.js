@@ -1,27 +1,21 @@
 const mongoose = require("mongoose");
 
-//Schema
+// Schema
 const StatusSchema = new mongoose.Schema(
   {
-    user_id: {
+    user: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
+      ref: "user",
     },
-    content_type: {
+    status_data: {
+      type: String,
+      required: true,
+      default: "",
+    },
+    type: {
       type: String,
       required: true,
     },
-    content: {
-      type: String,
-      required: true,
-    },
-    seen_by: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-      },
-    ],
   },
   {
     timestamps: true,
