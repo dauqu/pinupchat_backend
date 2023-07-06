@@ -23,7 +23,6 @@ const io = require("socket.io")(http, {
 //Allow json
 app.use(express.json());
 
-
 // Serve static files from the 'files' directory
 app.use(express.static('files'));
 
@@ -69,6 +68,14 @@ app.use(`${apiv1}/status`, require("./routes/status"));
 
 // // Handle socket connections
 io.on("connection", (socket) => {
+
+   // Handle signaling messages
+   socket.on('signal', (message) => {
+    // Broadcast the message to other clients
+    socket.broadcast.emit('signal', message);
+  });
+
+  
   // Handle joining the room
   socket.on("join_room", (room) => {
     // Join the specified room
