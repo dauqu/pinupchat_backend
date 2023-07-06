@@ -24,8 +24,7 @@ const io = require("socket.io")(http, {
 app.use(express.json());
 
 // Serve static files from the 'files' directory
-app.use(express.static('files'));
-
+app.use(express.static("files"));
 
 //Connect to database
 const connectDB = require("./config/database");
@@ -69,18 +68,17 @@ app.use(`${apiv1}/status`, require("./routes/status"));
 // // Handle socket connections
 io.on("connection", (socket) => {
 
-   // Handle signaling messages
-   socket.on('signal', (message) => {
+  
+  // Handle signaling messages
+  socket.on("signal", (message) => {
     // Broadcast the message to other clients
-    socket.broadcast.emit('signal', message);
+    socket.broadcast.emit("signal", message);
   });
 
-  
   // Handle joining the room
   socket.on("join_room", (room) => {
     // Join the specified room
     socket.join(room);
-
 
     socket.on("send_message", (messageData) => {
       // Broadcast the message data to all connected clients in the room
