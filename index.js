@@ -68,7 +68,7 @@ app.use(`${apiv1}/status`, require("./routes/status"));
 // // Handle socket connections
 io.on("connection", (socket) => {
 
-  
+
   // Handle signaling messages
   socket.on("signal", (message) => {
     // Broadcast the message to other clients
@@ -93,8 +93,8 @@ io.on("connection", (socket) => {
     });
 
     //Make Audio Call
-    socket.on("make_audio_call", (data) => {
-      io.to(room).emit("audio_call", data);
+    socket.on("start_audio_call", (data) => {
+      io.to(room).emit("start_audio_call", data);
     });
 
     //End Audio Call
@@ -103,8 +103,8 @@ io.on("connection", (socket) => {
     });
 
     //Make Video Call
-    socket.on("make_video_call", (data) => {
-      io.to(room).emit("video_call", data);
+    socket.on("start_video_call", (data) => {
+      io.to(room).emit("start_video_call", data);
     });
 
     //End Video Call
