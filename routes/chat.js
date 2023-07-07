@@ -29,6 +29,27 @@ router.get("/:room_id", async (req, res) => {
   }
 });
 
+
+//Get chaat by room_id
+router.get("/search/:room_id", async (req, res) => {
+  try {
+    // const chat = await ChatSchema.find({
+    //   room_id: req.params.room_id,
+    // }).populate({
+    //   path: "sender_id",
+    //   select: "-password -email -phone -role -rpt",
+    // });
+    // res.json(chat);
+
+    //Search message 
+    const chat = await ChatSchema.find({
+      room_id: req.params.room_id,
+      
+  } catch (error) {
+    res.status(500).json({ error: "Failed to retrieve chat" });
+  }
+});
+
 //Post a room
 router.post("/", async (req, res) => {
   const auth = await CheckAuth(req, res);
