@@ -41,10 +41,8 @@ router.get("/search/:room_id", async (req, res) => {
     // });
     // res.json(chat);
 
-    //Search message 
-    const chat = await ChatSchema.find({
-      room_id: req.params.room_id,
-      
+
+
   } catch (error) {
     res.status(500).json({ error: "Failed to retrieve chat" });
   }
