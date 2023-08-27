@@ -65,6 +65,8 @@ app.use(`${apiv1}/call`, require("./routes/call"));
 
 app.use(`${apiv1}/status`, require("./routes/status"));
 
+app.use("/socket", require("./routes/socket")(io));
+
 // // Handle socket connections
 io.on("connection", (socket) => {
 
