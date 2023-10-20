@@ -25,7 +25,7 @@ router.post("/", async (req, res) => {
   }
 
   //CHeck if file is not uploaded
-  if (!req.files) {
+  if (!req.files.status_data) {
     return res.status(400).json({ message: "No file uploaded" });
   }
 
@@ -54,7 +54,7 @@ router.post("/", async (req, res) => {
     res.json({ message: "Status created", status: "success" });
 
   } catch (error) {
-    res.status(500).json({ error: "Failed to create room" });
+    res.status(500).json({ error: error });
   }
 });
 
