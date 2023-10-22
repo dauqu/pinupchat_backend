@@ -23,6 +23,26 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+//get community where admin is my id
+router.get("/my", async (req, res) => {
+  // Check Auth first
+  const check = await CheckAuth(req, res);
+  if (check.auth === false) {
+    return res
+      .status(401)
+      .json({ message: "Unauthorized", data: null, auth: false });
+  }
+
+  try {
+    const community = await CommunitySchema.find({
+      admin: check.data._id,
+    });
+    res.json(community);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to retrieve community" });
+  }
+});
+
 //Post a community
 router.post("/", async (req, res) => {
   // Check Auth first
@@ -46,7 +66,11 @@ router.post("/", async (req, res) => {
   }
 
   //Check if username is already taken
-  const username = CommunitySchema.findOne({ username: req.body.username });
+  // Check if username is already taken
+  const username = await CommunitySchema.findOne({
+    username: req.body.username,
+  });
+
   if (username) {
     return res
       .status(400)
@@ -89,9 +113,8 @@ router.patch("/:id", async (req, res) => {
 //Delete a community
 router.delete("/:id", async (req, res) => {
   try {
-    const community = await CommunitySchema.findById(req.params.id);
-    const deletedCommunity = await community.remove();
-    res.json(deletedCommunity);
+    const community = await CommunitySchema.findByIdAndDelete(req.params.id);
+    res.json(community);
   } catch (error) {
     res.status(500).json({ error: "Failed to delete community" });
   }
