@@ -64,6 +64,7 @@ app.use(`${apiv1}/chat`, require("./routes/chat"));
 app.use(`${apiv1}/call`, require("./routes/call"));
 
 app.use(`${apiv1}/status`, require("./routes/status"));
+app.use(`${apiv1}/community`, require("./routes/community"));
 
 app.use("/socket", require("./routes/socket")(io));
 
