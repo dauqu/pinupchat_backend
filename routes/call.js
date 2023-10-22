@@ -1,7 +1,80 @@
 const express = require("express");
 const router = express.Router();
+const CallSchema = require("../schema/call_schema");
+const CheckAuth = require("./../functions/check_auth");
+const UsersSchema = require("./../schema/user_schema");
 
 module.exports = function (io) {
+  // Route logic
+  router.get("/", async (req, res) => {
+    const calls = await CallSchema.find();
+    res.json(calls);
+  });
+
+  router.get("/:id", async (req, res) => {
+    try {
+      const call = await CallSchema.findById(req.params.id);
+      if (!call) {
+        return res.status(404).json({ message: "Call not found" });
+      }
+      res.json(call);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to retrieve call" });
+    }
+  });
+
+  router.post("/", async (req, res) => {
+    // Check Auth
+    const auth = await CheckAuth(req, res);
+    if (auth.auth === false) {
+      return res
+        .status(401)
+        .json({ message: "Unauthorized", data: null, auth: false });
+    }
+
+    //Check if call to user exist
+    const user = await UsersSchema.findById(req.body.call_to);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    //You can't call yourself
+    if (auth.data._id == req.body.call_to) {
+      return res.status(400).json({ message: "You can't call yourself" });
+    }
+
+    const call = new CallSchema({
+      type: req.body.type,
+      call_from: auth.data._id,
+      call_to: req.body.call_to,
+    });
+
+    try {
+      //broadcast the call to the room
+      io.to(req.body.room).emit("call", call);
+      const newCall = await call.save();
+      res.status(201).json(newCall);
+    } catch (error) {
+      res.status(400).json({ error: "Failed to create call" });
+    }
+  });
+
+  router.patch("/:id", async (req, res) => {
+    try {
+      const call = await CallSchema.findById(req.params.id);
+      if (!call) {
+        return res.status(404).json({ message: "Call not found" });
+      }
+      const updatedCall = await call.updateOne({
+        call_status: req.body.call_status,
+        call_duration: req.body.call_duration,
+      });
+      res.json(updatedCall);
+    } catch (error) {
+      res.status(400).json({ error: "Failed to update call" });
+    }
+  });
+
   // // Handle socket connections
   io.on("connection", (socket) => {
     // Handle joining the room
@@ -36,11 +109,5 @@ module.exports = function (io) {
       });
     });
   });
-
-  // Route logic
-  router.get("/", (req, res) => {
-    res.json({ message: "QR Login route" });
-  });
-
   return router;
 };

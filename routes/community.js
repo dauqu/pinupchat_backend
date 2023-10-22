@@ -191,6 +191,25 @@ router.post("/add/participant", async (req, res) => {
   }
 });
 
+//Get all community where user is a participant
+router.get("/my/participant", async (req, res) => {
+  // Check Auth first
+  const check = await CheckAuth(req, res);
+  if (check.auth === false) {
+    return res
+      .status(401)
+      .json({ message: "Unauthorized", data: null, auth: false });
+  }
+  try {
+    const community = await CommunitySchema.find({
+      participants: { $elemMatch: { user: check.data._id } },
+    });
+    res.json(community);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to retrieve community" });
+  }
+});
+
 //Update a community
 router.patch("/:id", async (req, res) => {
   try {

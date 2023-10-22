@@ -40,9 +40,6 @@ router.get("/search/:room_id", async (req, res) => {
     //   select: "-password -email -phone -role -rpt",
     // });
     // res.json(chat);
-
-
-
   } catch (error) {
     res.status(500).json({ error: "Failed to retrieve chat" });
   }
