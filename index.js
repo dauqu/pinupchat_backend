@@ -64,14 +64,14 @@ app.use(`${apiv1}/chat`, require("./routes/chat"));
 app.use(`${apiv1}/call`, require("./routes/call"));
 
 app.use(`${apiv1}/status`, require("./routes/status"));
+
 app.use(`${apiv1}/community`, require("./routes/community"));
+app.use(`${apiv1}/community-chat`, require("./routes/community_chat"));
 
 app.use("/socket", require("./routes/socket")(io));
 
 // // Handle socket connections
 io.on("connection", (socket) => {
-
-
   // Handle signaling messages
   socket.on("signal", (message) => {
     // Broadcast the message to other clients
