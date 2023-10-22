@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const CommunitySchema = require("../schema/community_schema");
 const CheckAuth = require("./../functions/check_auth");
+const UsersSchema = require("./../schema/user_schema");
 
 //Get community
 router.get("/", async (req, res) => {
@@ -15,7 +16,6 @@ router.get("/", async (req, res) => {
 
 //get community where admin is my id
 router.get("/my/community", async (req, res) => {
-    
   // Check Auth first
   const check = await CheckAuth(req, res);
   if (check.auth === false) {
@@ -81,7 +81,11 @@ router.post("/", async (req, res) => {
   }
 
   const community = new CommunitySchema({
-    participants: req.body.participants,
+    participants: [
+      {
+        user: check.data._id,
+      },
+    ],
     name: req.body.name,
     logo: req.body.logo,
     username: req.body.username,
@@ -94,6 +98,96 @@ router.post("/", async (req, res) => {
     res.json(savedCommunity);
   } catch (error) {
     res.status(500).json({ error: "Failed to save community" });
+  }
+});
+
+//Add a participant
+router.post("/add/participant", async (req, res) => {
+  // Check Auth first
+  const check = await CheckAuth(req, res);
+  if (check.auth === false) {
+    return res
+      .status(401)
+      .json({ message: "Unauthorized", data: null, auth: false });
+  }
+
+  if (!req.body.community_id) {
+    return res
+      .status(400)
+      .json({ message: "Community ID is required", data: null, auth: true });
+  }
+
+  if (!req.body.user_id) {
+    return res
+      .status(400)
+      .json({ message: "User ID is required", data: null, auth: true });
+  }
+
+  // Check if community exists
+  try {
+    const community = await CommunitySchema.find({
+      _id: req.body.community_id,
+    });
+    if (!community) {
+      return res
+        .status(404)
+        .json({ message: "Community not found", data: null, auth: true });
+    }
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "Internal server error", data: null, auth: true });
+  }
+
+  // Check if user exists
+  try {
+    const user = await UsersSchema.findById(req.body.user_id);
+    if (!user) {
+      return res
+        .status(404)
+        .json({ message: "User not found", data: null, auth: true });
+    }
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "Internal server error", data: null, auth: true });
+  }
+
+  // Check if user is already a participant
+  try {
+    const participant = await CommunitySchema.findOne({
+      _id: req.body.community_id,
+      participants: { $elemMatch: { user: req.body.user_id } },
+    });
+    if (participant) {
+      return res.status(400).json({
+        message: "User is already a participant",
+        data: null,
+        auth: true,
+      });
+    }
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "Internal server error", data: null, auth: true });
+  }
+
+  // Add participant
+  try {
+    const participant = await CommunitySchema.findByIdAndUpdate(
+      req.body.community_id,
+      {
+        $push: {
+          participants: {
+            user: req.body.user_id,
+          },
+        },
+      },
+      { new: true }
+    );
+    res.json(participant);
+  } catch (error) {
+    res.status(500).json({ error: error });
   }
 });
 
