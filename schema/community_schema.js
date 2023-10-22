@@ -29,6 +29,10 @@ const CommunitySchema = new mongoose.Schema(
       required: true,
       ref: "users",
     },
+    about: {
+      type: String,
+      default: "",
+    },
     last_message: {
       type: String,
       default: "",
