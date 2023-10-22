@@ -11,6 +11,26 @@ module.exports = function (io) {
     res.json(calls);
   });
 
+  //Get my calls where I am the caller or the receiver
+  router.get("/my-calls", async (req, res) => {
+    // Check Auth
+    const auth = await CheckAuth(req, res);
+    if (auth.auth === false) {
+      return res
+        .status(401)
+        .json({ message: "Unauthorized", data: null, auth: false });
+    }
+
+    try {
+      const calls = await CallSchema.find({
+        $or: [{ call_from: auth.data._id }, { call_to: auth.data._id }],
+      });
+      res.json(calls);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to retrieve calls" });
+    }
+  });
+
   router.get("/:id", async (req, res) => {
     try {
       const call = await CallSchema.findById(req.params.id);
