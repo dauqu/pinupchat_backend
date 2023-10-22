@@ -13,18 +13,9 @@ router.get("/", async (req, res) => {
   }
 });
 
-//Get community by id
-router.get("/:id", async (req, res) => {
-  try {
-    const community = await CommunitySchema.findById(req.params.id);
-    res.json(community);
-  } catch (error) {
-    res.status(500).json({ error: "Failed to retrieve community" });
-  }
-});
-
 //get community where admin is my id
-router.get("/my", async (req, res) => {
+router.get("/my/community", async (req, res) => {
+    
   // Check Auth first
   const check = await CheckAuth(req, res);
   if (check.auth === false) {
@@ -33,10 +24,22 @@ router.get("/my", async (req, res) => {
       .json({ message: "Unauthorized", data: null, auth: false });
   }
 
+  console.log(check.data._id);
+
   try {
     const community = await CommunitySchema.find({
       admin: check.data._id,
     });
+    res.json(community);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to retrieve community" });
+  }
+});
+
+//Get community by id
+router.get("/:id", async (req, res) => {
+  try {
+    const community = await CommunitySchema.findById(req.params.id);
     res.json(community);
   } catch (error) {
     res.status(500).json({ error: "Failed to retrieve community" });
