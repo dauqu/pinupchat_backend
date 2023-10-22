@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const CommunitySchema = new mongoose.Schema(
   {
     participants: {
+      default: [],
       type: Array,
       required: true,
       ref: "users",
@@ -14,7 +15,7 @@ const CommunitySchema = new mongoose.Schema(
     },
     logo: {
       type: String,
-      default: "",
+      default: "https://cdn1.iconfinder.com/data/icons/avatar-97/32/avatar-02-512.png",
     },
     admin: {
       type: String,

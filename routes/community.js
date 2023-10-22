@@ -33,10 +33,31 @@ router.post("/", async (req, res) => {
       .json({ message: "Unauthorized", data: null, auth: false });
   }
 
+  if (!req.body.name) {
+    return res
+      .status(400)
+      .json({ message: "Name is required", data: null, auth: true });
+  }
+
+  if (!req.body.username) {
+    return res
+      .status(400)
+      .json({ message: "Username is required", data: null, auth: true });
+  }
+
+  //Check if username is already taken
+  const username = CommunitySchema.findOne({ username: req.body.username });
+  if (username) {
+    return res
+      .status(400)
+      .json({ message: "Username already taken", data: null, auth: true });
+  }
+
   const community = new CommunitySchema({
     participants: req.body.participants,
     name: req.body.name,
     logo: req.body.logo,
+    username: req.body.username,
     admin: check.data._id,
     last_message: req.body.last_message,
   });
