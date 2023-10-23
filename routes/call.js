@@ -24,7 +24,7 @@ module.exports = function (io) {
     try {
       const calls = await CallSchema.find({
         $or: [{ call_from: auth.data._id }, { call_to: auth.data._id }],
-      });
+      }).populate("call_from call_to", "full_name email dp");
       res.json(calls);
     } catch (error) {
       res.status(500).json({ error: "Failed to retrieve calls" });
